@@ -21,7 +21,7 @@
 
 fepc_real_t 
 _round(fepc_real_t value) {
-    if (value - ((int) value) >= 0.5) {
+    if (value - ((int) value) < 0.5) {
         return (fepc_real_t) (int) value;
     } else {
         return (fepc_real_t) (int) value +1.0;
@@ -30,7 +30,7 @@ _round(fepc_real_t value) {
 
 linear_function_p
 linear_function_new(fepc_real_t y_0, fepc_real_t slope) {
-    linear_function_p result = (linear_function_p) malloc(sizeof(linear_function_p));
+    linear_function_p result = (linear_function_p) malloc(sizeof(linear_function_t));
     
     result->y_0 = y_0;
     result->slope = slope;
@@ -40,7 +40,7 @@ linear_function_new(fepc_real_t y_0, fepc_real_t slope) {
 
 linear_function_p
 linear_function_new_points(fepc_real_t y_0, fepc_real_t y_1, fepc_real_t dx) {
-    linear_function_p result = (linear_function_p) malloc(sizeof(linear_function_p));
+    linear_function_p result = (linear_function_p) malloc(sizeof(linear_function_t));
     
     result->y_0 = y_0;
     result->slope = (y_1 - y_0)/dx;
@@ -50,17 +50,17 @@ linear_function_new_points(fepc_real_t y_0, fepc_real_t y_1, fepc_real_t dx) {
 
 linear_function_set_p
 linear_function_set_new(int count) {
-    linear_function_set_p result = (linear_function_set_p) malloc(sizeof(linear_function_set_p));
+    linear_function_set_p result = (linear_function_set_p) malloc(sizeof(linear_function_set_t));
     
     result->count = count;
-    result->functions = (linear_function_p*) malloc(sizeof(linear_function_t)*count);
+    result->functions = (linear_function_p*) malloc(sizeof(linear_function_p)*count);
     return result;
 }
 
 
 discont_function_p
 discont_function_new(int stepcount) {
-    discont_function_p result = (discont_function_p) malloc(sizeof(discont_function_p));
+    discont_function_p result = (discont_function_p) malloc(sizeof(discont_function_t));
     
     result->stepcount = stepcount;
     result->intervals = (interval_p*) malloc(sizeof(interval_p)*stepcount);
@@ -111,8 +111,9 @@ discont_function_setup_points(discont_function_p function, int step, fepc_real_t
     int count, n;
     
     count = _round((end-start)/h_l); // this has to be equal to the array sizes of y1 and y2
-    
+
     function->function_sets[step] = linear_function_set_new(count);
+
     if (y1 != NULL && y2 != NULL) {
         for (n = 0; n < count; n++) {
             function->function_sets[step]->functions[n] = linear_function_new_points(y1[n], y2[n], h_l);

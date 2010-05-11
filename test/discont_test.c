@@ -22,8 +22,8 @@
 int
 main(void) {
     /* Example */
-
-    fepc_real_t stepping = 0.00001;
+    
+    fepc_real_t stepping = 0.1;
 
     int steps, n;
 
@@ -55,12 +55,13 @@ main(void) {
     discont_function_del(function);
 
     func_print(f1, 3);
-
+	
 
     // Create f2 in the same way!
 
 
     // set up the structure w of the result
+
     function = discont_function_new(steps);
     discont_function_setup_points(function, 0, 0.0, 1.0, NULL, NULL, stepping); // interval [0, 1] at level 0
     discont_function_setup_points(function, 1, 0.3, 0.6, NULL, NULL, stepping); // interval [0.3, 0.6] at level 1
