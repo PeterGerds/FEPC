@@ -68,6 +68,10 @@ entry_d2one(vec_p s,vec_p n);
 vec_p
 entry_one2d(int pos,vec_p n);
 
+/* Berechnet den zugehoerigen Vektor der Position pos eines multidimensionalen Array, dessen Dimension durch den Vektor n bestimmt ist, ohne dabei streng zu sein */
+vec_p
+entry_one2d_sloppy(int pos,vec_p n);
+
 /* Berechnet den Vektor a*s + b*n */
 vec_p
 vec_op(int a, vec_p s, int b, vec_p n);
@@ -75,6 +79,14 @@ vec_op(int a, vec_p s, int b, vec_p n);
 /* Multipliziert den Vektor n mit der ganzen Zahl a */
 vec_p
 vec_multi(int a, vec_p n);
+
+/* Multipliziert einen reelwertigen Vektor mit einer Konstante */
+vec_real_p
+vec_real_multi(fepc_real_t factor, vec_real_p vector);
+
+/* Multipliziert einen reelwertigen Vektor mit einer Konstante und speichert das Ergebnis im Eingabevektor */
+void
+vec_real_multi2(fepc_real_t factor, vec_real_p vector);
 
 /* Dividiert den Vektor n mit der ganzen Zahl a */
 vec_p
@@ -84,13 +96,24 @@ vec_div(int a, vec_p n);
 vec_p
 vec_add(vec_p s, vec_p n);
 
+/* Addiert Vektor s und Vektor n und speichert das Ergebnis in s */
+void
+vec_add2(vec_p s, vec_p n);
+
 /* Erzeugt eine inhaltliche Kopie des Vektors n */
 vec_p
 vec_copy(vec_p n);
 
+/* Subtrahiert Vektor s und Vektor n */
+vec_real_p
+vec_real_substract(vec_real_p s, vec_real_p n);
+
 /* Berechnet das Skalarprodukt der Vektoren r und s */
 int
 vec_skalar_prod(vec_p r, vec_p s);
+
+fepc_real_t
+vec_real_skalar_prod(vec_real_p r, vec_real_p s);
 
 /* Berechnet den groessten Vektor n sodass gilt: n<=r und n<=s */
 vec_p
@@ -121,7 +144,24 @@ besitzt die Groesse 2. Es gilt Array[0] = s , Array[1] = r. */
 vec_p*
 vec_zerlegung(vec_p n);
 
+/**
+ * Prints out a vector.
+ */
+void 
+print_vec(vec_p vector);
 
+/**
+ * Prints out a real-valued vector 
+ */
+void 
+print_vec_real(vec_real_p vector);
 
+/*
+ * Returns the euklidian norm of the vector.
+ */
+fepc_real_t 
+vec_real_norm(vec_real_p vector);
 
 #endif
+
+

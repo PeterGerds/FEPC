@@ -69,6 +69,10 @@ folge_norm(folge_p f, folge_p g);
 folge_p
 folge_add(folge_p f, folge_p g);
 
+/* Subtraktion von Folgen f und g */
+folge_p
+folge_subtract(folge_p f, folge_p g);
+
 /* Rueckgabe einer einer Kopie der Folge f */
 folge_p
 folge_copy( folge_p f);
@@ -78,7 +82,11 @@ folge_copy( folge_p f);
 folge_p
 folge_projekt(folge_p f, folge_p g);
 
+folge_p
+folge_multi_factor(folge_p folge, fepc_real_t factor);
 
 
 
 #endif
+
+

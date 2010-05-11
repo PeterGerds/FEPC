@@ -96,9 +96,18 @@ folgen_vektor_projekt(folgen_vektor_p f,folgen_vektor_p g);
 folgen_vektor_p
 folgen_vektor_add(folgen_vektor_p f, folgen_vektor_p g);
 
+/* Subtraktion von Folgenvektor f und g */
+folgen_vektor_p
+folgen_vektor_subtract(folgen_vektor_p f, folgen_vektor_p g);
+
+/* Multiplikation von Folgenvektor f mit faktor a */
+folgen_vektor_p
+folgen_vektor_factor_multi(folgen_vektor_p f, fepc_real_t a);
+
 /* Addition von Folgenmatritzen f und g */
 folgen_matrix_p
 folgen_matrix_add(folgen_matrix_p f, folgen_matrix_p g);
 
-
 #endif
+
+

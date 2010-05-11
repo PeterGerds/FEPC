@@ -68,7 +68,8 @@ func2_del(func2_p f);
 func_p
 func_projekt(func_p f,func_p g);
 
-
+func_p
+func_clone(func_p f);
 
 /* Gibt die einzelnen Details einer Funktion auf dem Bildschirm wieder. Je groesser der Wert info ist, umso mehr
  Informationen werden wiedergegeben. 0, 1, 2, 3 sind moegliche Infowerte. 0 wenig Info, 3 viele Infos */
@@ -90,6 +91,7 @@ func_build( int maxlevel, int dim , int grad, int a, int n, int mod, bool_t rand
 func_p
 func_add(func_p f, func_p g);
 
+
 /* Funktion gibt die Anzahl der Freiheitsgrade der Funktionen f, g und w wieder */
 int
 func_count( func_p f, func_p g, func_p w );
@@ -107,6 +109,10 @@ func_modell_count( func_p f, func_p g, func_p w );
  Level repraesentiert wird, so wird dieser Folgenwert gleich Null gesetzt. */
 void
 func_grid_zero(func_p f);
+
+
+func_p
+func_factor_multi(func_p function, fepc_real_t factor);
 
 
 #endif

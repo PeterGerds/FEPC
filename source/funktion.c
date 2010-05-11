@@ -66,13 +66,15 @@ func_new(int maxlevel, int dim) {
 
 void
 func_del(func_p f) {
-	int  k;
+    if (f && f != NULL) {
+        int  k;
 
-	for(k=0;k<=f->maxlevel;k++) {
-		folgen_vektor_del(f->hierarchie[k]);
-	}
-	free(f->hierarchie);
-	free(f);
+	    for(k=0;k<=f->maxlevel;k++) {
+		    folgen_vektor_del(f->hierarchie[k]);
+	    }
+	    free(f->hierarchie);
+	    free(f);
+    }
 }
 
 
@@ -140,6 +142,10 @@ func_projekt(func_p f,func_p g) {
 	return back;
 }
 
+func_p
+func_clone(func_p f) {
+    return func_projekt(f, f);
+}
 
 
 
@@ -189,8 +195,6 @@ func_build( int maxlevel, int dim , int grad, int a, int n, int mod, bool_t rand
 }
 
 
-
-
 func_p
 func_add(func_p f, func_p g) {
 	func_p  back;
@@ -223,6 +227,7 @@ func_add(func_p f, func_p g) {
 
 	return back;
 }
+
 
 int
 func_count( func_p f, func_p g, func_p w ) {
@@ -383,3 +388,21 @@ func_grid_zero(func_p f) {
 	}
 	vec_del(vec_1);
 }
+
+func_p 
+func_factor_multi(func_p function, fepc_real_t factor) {
+    func_p  back = func_new(function->maxlevel, function->dim);
+    
+    folgen_vektor_p  temp;
+    
+    int k;
+    
+	for (k=0;k<=function->maxlevel;k++) {
+		temp = folgen_vektor_factor_multi( function->hierarchie[k], factor );
+		folgen_vektor_del( back->hierarchie[k] );
+		back->hierarchie[k] = temp;
+	}
+
+	return back;
+}
+

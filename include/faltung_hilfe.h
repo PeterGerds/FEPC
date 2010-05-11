@@ -59,3 +59,13 @@ faltung_hilfe_Gamma_bauen_2( func_p g, vec_real_p mesh, vec_p maxgrad, matrix3_p
 
 
 #endif
+
+
+
+
+
+
+
+
+
+

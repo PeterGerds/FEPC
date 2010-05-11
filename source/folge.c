@@ -408,6 +408,50 @@ folge_add(folge_p f, folge_p g) {
 	}
 }
 
+folge_p
+folge_subtract(folge_p f, folge_p g) {
+	folge_p  back;
+	int  size, k, size_g, size_f;
+	fepc_real_t  x, y;
+	vec_p  temp1, temp2, max, lang, min, r;
+
+
+	size_f = vec_size( f->lang );
+	size_g = vec_size( g->lang );
+	if(size_f == 0) {
+		back = folge_copy( g ); // TODO multiply with -1
+		return back;
+	}
+
+	if(size_g == 0) {
+		back = folge_copy( f );
+		return back;
+	}
+
+	if( (size_g!=0) && (size_f!=0) ) {
+		min = vec_min( f->start, g->start );
+		temp1 = vec_add( f->start, f->lang );
+		temp2 = vec_add( g->start, g->lang );
+		max = vec_max( temp1, temp2 );
+		vec_del( temp1 );
+		vec_del( temp2 );
+		lang = vec_op( 1, max, -1, min);
+		vec_del( max );
+		back = folge_new( min, lang );
+		size = vec_size( lang );
+		for(k=0;k<size;k++) {
+			temp1 = entry_one2d( k, lang );
+			r = vec_add( min, temp1 );
+			vec_del( temp1 );
+			x = folge_glied( r, f );
+			y = folge_glied( r, g );
+			vec_del( r );
+			back->glied[k] = x - y;
+		}
+		return back;
+	}
+}
+
 
 folge_p
 folge_copy( folge_p f) {
@@ -450,3 +494,27 @@ folge_projekt(folge_p f, folge_p g) {
 
 	return back;
 }
+
+folge_p
+folge_multi_factor(folge_p folge, fepc_real_t factor) {
+    folge_p  back;
+    vec_p lang, start;
+	int  k, size;
+
+    start = vec_copy( folge->start );
+	lang = vec_copy( folge->lang );
+
+	back = folge_new( start, lang );
+	size = vec_size( lang );
+	
+	for(k=0;k<size;k++) {
+
+		back->glied[k] = folge->glied[k]*factor;
+	}
+
+	return back;
+}
+
+
+
+

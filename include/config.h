@@ -38,7 +38,14 @@
  * basic types
  */
 
-typedef enum { false, true } bool_t;
+/*
+ * Adds c++ compatibility
+ */
+#if !defined(__cplusplus)
+	typedef enum { false, true } bool_t;
+#else
+	typedef bool bool_t;
+#endif
 
 typedef double  fepc_real_t;
 

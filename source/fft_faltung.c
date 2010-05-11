@@ -160,3 +160,4 @@ fft_faltung(fepc_real_t* a, vec_p n_a, fepc_real_t* b, vec_p n_b) {
     exit( 1 );
 #endif
 }
+
