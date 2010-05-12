@@ -86,6 +86,7 @@ main(void) {
     discont_function_setup_points(function, 0, 0.0, 1.0, NULL, NULL, stepping); // interval [0, 1] at level 0
         
     discont_function_setup_points(function, 1, 0.3, 0.6, NULL, NULL, stepping); // interval [0.3, 0.6] at level 1
+    
     w = func_new(steps-1, 1);
 
     set_gridstructure(w, function->intervals, stepping);
@@ -98,13 +99,12 @@ main(void) {
 
 	func_print(convolution_result, 3);
 	
-    result = convert_func(convolution_result, function->intervals, stepping);
+    result = convert_func(convolution_result, intervals_clone(function->intervals, function->stepcount), stepping);
 
     discont_function_del(function);
     func_del(convolution_result);
 
-
     // the result is stored in "result" as a discont-function
-    //discont_function_print(result);
+    discont_function_print(result);
     return 0;
 }
