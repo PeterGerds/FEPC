@@ -209,9 +209,9 @@ integrate_coeff_discont(discont_function_p function, int position, int v, int p,
 
     sqrt_h_l = sqrt(h_l);
     if (p == 0) { // legendre(0) = sqrt(1/h_l)
-        return sqrt_h_l*(y_0 + h_l*(slope/2.0)*(pow(v+1, 2)- pow(v, 2)));
+        return sqrt_h_l*(y_0 + h_l*(slope/2.0));
     } else { // p == 1 --> legendre(1) = sqrt(12)(x-(v+0.5)*h_l)/(h_l^1.5)
-        return SQRT_12*h_l*((slope/3.0)*(pow(v+1, 3)- pow(v, 3))*sqrt_h_l + sqrt_h_l*((y_0 / h_l -1*slope*(v+0.5))/2.0)*(pow(v+1, 2)- pow(v, 2)) - y_0*(v+0.5)/sqrt_h_l);
+        return h_l*sqrt_h_l*slope/SQRT_12;
     }
 }
 
