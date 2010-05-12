@@ -16,11 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if defined(HAS_FFTW3)
 #include <fftw3.h>
-
-#endif
-
 #include "fft_faltung.h"
 
 
@@ -41,8 +37,6 @@
  *******************************************************/
 fepc_real_t*
 fft_faltung(fepc_real_t* a, vec_p n_a, fepc_real_t* b, vec_p n_b) {
-#if defined(HAS_FFTW3)
-
 	int  size_a, size_b, size_c, dim;
 	int  k, i, wert, test;
 	int  *n;
@@ -151,13 +145,5 @@ fft_faltung(fepc_real_t* a, vec_p n_a, fepc_real_t* b, vec_p n_b) {
 	fftw_free(out_a);
 	fftw_free(out_b);
 	return c;
-
-
-
-#else
-    printf( "\n (fft_faltung) FEHLER : keine FFT Bibliothek verfuegbar\n" );
-
-    exit( 1 );
-#endif
 }
 

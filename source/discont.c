@@ -86,7 +86,9 @@ linear_function_set_del(linear_function_set_p function_set) {
     int n;
     
     for (n = 0; n < function_set->count; n++) {
-        free(function_set->functions[n]);
+    	if (function_set->functions[n] != NULL) {
+    		free(function_set->functions[n]);
+    	}
     }
     free(function_set->functions);
     free(function_set);
@@ -117,6 +119,10 @@ discont_function_setup_points(discont_function_p function, int step, fepc_real_t
     if (y1 != NULL && y2 != NULL) {
         for (n = 0; n < count; n++) {
             function->function_sets[step]->functions[n] = linear_function_new_points(y1[n], y2[n], h_l);
+        }
+    } else {
+    	for (n = 0; n < count; n++) {
+            function->function_sets[step]->functions[n] = NULL;
         }
     }
 }
