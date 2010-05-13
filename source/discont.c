@@ -171,7 +171,7 @@ convert_func(func_p function, interval_p * intervals, fepc_real_t stepping) {
     
     fepc_real_t h_l, temp_x1, temp_x2, temp_y1, temp_y2, slope;
     
-    int n, k, stepcount;
+    int n, k, stepcount, start;
     
     vec_real_p x;
     
@@ -180,15 +180,12 @@ convert_func(func_p function, interval_p * intervals, fepc_real_t stepping) {
         result->intervals[n] = intervals[n];
         stepcount = _round((intervals[n]->end[0] - intervals[n]->start[0])/h_l);
         result->function_sets[n] = linear_function_set_new(stepcount);
+        start = function->hierarchie[n]->vektor[0]->start->array[0];
         for (k = 0; k < stepcount; k++) {
-            /*
-            to make sure we are are using the correct linear function, we use the points 1/3 and 2/3 instead of 0 and 1 to 
-            calculate the linear function
-            */
-            temp_x1 = (k + ONE_THIRD)*h_l;
-            temp_x2 = (k + TWO_THIRD)*h_l;
+            temp_x1 = (start+k)*h_l;
+            temp_x2 = (1+start+k)*h_l;
             x = vec_real_new(1);
-            x->array[0] = temp_x2;
+            x->array[0] = temp_x1;
             temp_y1 = get_value_at_step(function, x, n, stepping);
             vec_real_del(x);
             x = vec_real_new(1);
