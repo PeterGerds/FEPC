@@ -59,7 +59,7 @@ linear_function_p
 linear_function_new(fepc_real_t x_0, fepc_real_t slope);
 
 linear_function_p
-linear_function_new_points(fepc_real_t x_0, fepc_real_t x_1, fepc_real_t dx);
+linear_function_new_points(fepc_real_t y_0, fepc_real_t y_1, fepc_real_t x_0, fepc_real_t x_1);
 
 void
 discont_function_del(discont_function_p function);

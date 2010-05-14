@@ -39,12 +39,10 @@ linear_function_new(fepc_real_t y_0, fepc_real_t slope) {
 
 
 linear_function_p
-linear_function_new_points(fepc_real_t y_0, fepc_real_t y_1, fepc_real_t dx) {
-    linear_function_p result = (linear_function_p) malloc(sizeof(linear_function_t));
-    
-    result->y_0 = y_0;
-    result->slope = (y_1 - y_0)/dx;
-    return result;
+linear_function_new_points(fepc_real_t y_0, fepc_real_t y_1, fepc_real_t x_0, fepc_real_t x_1) {
+	fepc_real_t slope = (y_1-y_0) / (x_1-x_0);
+
+    return linear_function_new(y_1-slope*x_0, slope);
 }
 
 
@@ -85,6 +83,7 @@ void
 linear_function_set_del(linear_function_set_p function_set) {
     int n;
     
+
     for (n = 0; n < function_set->count; n++) {
     	if (function_set->functions[n] != NULL) {
     		free(function_set->functions[n]);
@@ -118,7 +117,7 @@ discont_function_setup_points(discont_function_p function, int step, fepc_real_t
 
     if (y1 != NULL && y2 != NULL) {
         for (n = 0; n < count; n++) {
-            function->function_sets[step]->functions[n] = linear_function_new_points(y1[n], y2[n], h_l);
+            function->function_sets[step]->functions[n] = linear_function_new_points(y1[n], y2[n], start+n*h_l, start+(n+1)*h_l );
         }
     } else {
     	for (n = 0; n < count; n++) {
@@ -182,18 +181,16 @@ convert_func(func_p function, interval_p * intervals, fepc_real_t stepping) {
         result->function_sets[n] = linear_function_set_new(stepcount);
         start = function->hierarchie[n]->vektor[0]->start->array[0];
         for (k = 0; k < stepcount; k++) {
-            temp_x1 = (start+k)*h_l;
-            temp_x2 = (1+start+k)*h_l;
+            temp_x1 = (ONE_THIRD+start+k)*h_l;
+            temp_x2 = (TWO_THIRD+start+k)*h_l;
             x = vec_real_new(1);
             x->array[0] = temp_x1;
             temp_y1 = get_value_at_step(function, x, n, stepping);
-            vec_real_del(x);
-            x = vec_real_new(1);
             x->array[0] = temp_x2;
             temp_y2 = get_value_at_step(function, x, n, stepping);
             vec_real_del(x);
-            slope = 3*(temp_y2-temp_y1);
-            result->function_sets[n]->functions[k] = linear_function_new(slope*k*h_l+temp_y1, slope);
+            slope = 3*(temp_y2-temp_y1)/h_l;
+            result->function_sets[n]->functions[k] = linear_function_new(temp_y1 - slope*temp_x1, slope);
         }
     }
     return result;
