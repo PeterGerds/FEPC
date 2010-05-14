@@ -42,7 +42,7 @@ linear_function_p
 linear_function_new_points(fepc_real_t y_0, fepc_real_t y_1, fepc_real_t x_0, fepc_real_t x_1) {
 	fepc_real_t slope = (y_1-y_0) / (x_1-x_0);
 
-    return linear_function_new(y_1-slope*x_0, slope);
+    return linear_function_new(y_0-slope*x_0, slope);
 }
 
 
