@@ -143,7 +143,7 @@ fepc_real_t phi_l(int step, vec_p v, vec_p p, vec_real_p x, fepc_real_t stepping
         if (v->array[n]*h_l > x->array[n] || (v->array[n]+1)*h_l < x->array[n]) {
             return 0;
         }
-        result *= sqrt((2*p->array[n] + 1)/h_l)*legendre(p->array[n], 2*x->array[n]/h_l - 2*v->array[n] - 1); 
+        result *= sqrt((2*p->array[n] + 1)/h_l)*legendre(p->array[n], 2.0*x->array[n]/h_l - 2.0*v->array[n] - 1.0); 
     } 
     return result;
 }
@@ -177,7 +177,6 @@ vec_real_set_p get_value(func_p function, Funcimpl_vec_step generate_points, fep
                 r = generate_folgenvector(function->hierarchie[n]->vektor[l], k);
                 position = entry_d2one(r, function->hierarchie[n]->vektor[l]->lang);
                 vec_add2(r, function->hierarchie[n]->vektor[l]->start);           
-
                 // only take the point if it is inside of the correct A-interval; if not in interval -> reduce size of set
                 if (n == function->maxlevel || !is_in_latter_interval(r, function->hierarchie[n+1]->vektor[l])) {
                     x = entry_one2d_sloppy(l, function->hierarchie[n]->grad);
@@ -213,13 +212,12 @@ fepc_real_t get_value_at_step(func_p function, vec_real_p x, int step, fepc_real
             r = generate_folgenvector(function->hierarchie[step]->vektor[k], n);
             position = entry_d2one(r, function->hierarchie[step]->vektor[k]->lang);
             vec_add2(r, function->hierarchie[step]->vektor[k]->start);           
-
             // only take the point if it is inside of the correct A-interval
             if (step == function->maxlevel || !is_in_latter_interval(r, function->hierarchie[step+1]->vektor[k])) {
                 p = entry_one2d_sloppy(k, function->hierarchie[step]->grad);
                 result += function->hierarchie[step]->vektor[k]->glied[position]* phi_l(step, r, p, x, stepping);
                 vec_del(p);
-            } 
+            }
             vec_del(r);
         } 
     }
@@ -493,7 +491,7 @@ vec_real_p generate_x_for_integration_st(vec_p v, int calc_position, fepc_real_t
     for (n = 0; n < v->dim; n++) {
         current = calc_position % stepcount;
         calc_position = (calc_position - current) / stepcount;
-        result->array[n] = v->array[n]*h_l+current*h;
+        result->array[n] = v->array[n]*h_l+(2.0*current +1)*h/2.0;
     }
     return result;
 }
@@ -543,9 +541,7 @@ fepc_real_t integrate_coeff_st(Funcimpl function_impl, vec_p v, vec_p p, int ste
     h_l = get_h_l(step, stepping);
     
     h = h_l/(INT_STEPS); // step size
-    result = 0;
-    
-    
+    result = 0.0;
     // interval length is always h_l! (by design)
     
     calc_count = pow(INT_STEPS, v->dim);
@@ -563,8 +559,6 @@ fepc_real_t integrate_coeff_st(Funcimpl function_impl, vec_p v, vec_p p, int ste
         result += temp;
         vec_real_del(x);
     }
-    
-    //printf("sum = %f, result = %f ", result, pow(h_l, v->dim)*result/calc_count);
     
     return pow(h_l, v->dim)*result / pow(INT_STEPS-1, v->dim);
 }
@@ -641,7 +635,7 @@ void add_folgenentries(func_p function, Funcimpl function_impl, Funcimpl_step co
     
     int step, n, k, interval_element_count, position, grad_count;
     
-    vec_p v, x;
+    vec_p v, p;
     
     for (step = 0; step <= function->maxlevel; step++) {
         grad_count = get_degree_count(function->hierarchie[step]->grad);
@@ -651,11 +645,10 @@ void add_folgenentries(func_p function, Funcimpl function_impl, Funcimpl_step co
                 position = entry_d2one(v, function->hierarchie[step]->vektor[k]->lang);
                 vec_add2(v, function->hierarchie[step]->vektor[k]->start); // needed bc v starts from 0 
                 if (step == function->maxlevel || !is_in_latter_interval(v, function->hierarchie[step+1]->vektor[k])) { // only set the vector if it is in the valid interval
-                    x = entry_one2d_sloppy(k, function->hierarchie[step]->grad); // don't care about 0 as entries
-                                        
+                    p = entry_one2d_sloppy(k, function->hierarchie[step]->grad); // don't care about 0 as entries
                     // we prefer the coeff-function due to speed and acuracy:
-                    function->hierarchie[step]->vektor[k]->glied[position] = coeff_function != NULL ? coeff_function(v, x, step, stepping) : integrate_coeff_st(function_impl, v, x, step, stepping);
-                    vec_del(x);
+                    function->hierarchie[step]->vektor[k]->glied[position] = coeff_function != NULL ? coeff_function(v, p, step, stepping) : integrate_coeff_st(function_impl, v, p, step, stepping);
+                    vec_del(p);
                 }            
                 vec_del(v);
             }

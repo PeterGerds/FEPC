@@ -86,7 +86,7 @@ void
 linear_function_set_print(linear_function_set_p function_set);
 
 fepc_real_t 
-integrate_coeff_discont(discont_function_p function, int position, int v, int p, int step, fepc_real_t stepping);
+integrate_coeff_discont(discont_function_p function, int v, int position, int p, int step, fepc_real_t stepping);
 
 void 
 add_folgenentries_discont(func_p function, discont_function_p discont_function, fepc_real_t stepping);

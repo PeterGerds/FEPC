@@ -26,7 +26,7 @@
 #include "interval.h"
 
 #ifndef INT_STEPS
-#define INT_STEPS 20
+#define INT_STEPS 10
 #endif
 
 #define SQRT_3 1.7320508075688772935274463415058723669428

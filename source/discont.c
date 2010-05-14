@@ -177,7 +177,7 @@ convert_func(func_p function, interval_p * intervals, fepc_real_t stepping) {
     for (n = 0; n < result->stepcount; n++) {
         h_l = get_h_l(n, stepping);
         result->intervals[n] = intervals[n];
-        stepcount = _round((intervals[n]->end[0] - intervals[n]->start[0])/h_l);
+        stepcount = _round((intervals[n]->end[0] - intervals[n]->start[0])/h_l);  // number of interval points
         result->function_sets[n] = linear_function_set_new(stepcount);
         start = function->hierarchie[n]->vektor[0]->start->array[0];
         for (k = 0; k < stepcount; k++) {
@@ -198,43 +198,40 @@ convert_func(func_p function, interval_p * intervals, fepc_real_t stepping) {
 
 
 fepc_real_t
-integrate_coeff_discont(discont_function_p function, int position, int v, int p, int step, fepc_real_t stepping) {
+integrate_coeff_discont(discont_function_p function, int v, int position, int p, int level, fepc_real_t stepping) {
     // integrate from v[0]*h_l till (v[0]+1)*h_l
 	
-    fepc_real_t h_l, slope, y_0, sqrt_h_l;
-    h_l = get_h_l(step, stepping);
+    fepc_real_t h_l, slope, y_0;
+    h_l = get_h_l(level, stepping);
 	
-    slope = function->function_sets[step]->functions[position]->slope;
-    y_0 = function->function_sets[step]->functions[position]->y_0;
-
-    sqrt_h_l = sqrt(h_l);
+    slope = function->function_sets[level]->functions[position]->slope;
+    y_0 = function->function_sets[level]->functions[position]->y_0;
     if (p == 0) { // legendre(0) = sqrt(1/h_l)
-        return sqrt_h_l*(y_0 + h_l*(slope/2.0));
+        return sqrt(h_l)*(y_0 + h_l*(slope)*(v+0.5));
     } else { // p == 1 --> legendre(1) = sqrt(12)(x-(v+0.5)*h_l)/(h_l^1.5)
-        return h_l*sqrt_h_l*slope/SQRT_12;
+        return h_l*sqrt(h_l)*slope/SQRT_12;
     }
 }
 
 
 void
 add_folgenentries_discont(func_p function, discont_function_p discont_function, fepc_real_t stepping) {
+    int level, n, k, interval_element_count, position, grad_count, pos_2;
 
-    int step, n, k, interval_element_count, position, grad_count, pos_2;
+    vec_p v, p;
 
-    vec_p v, x;
-
-    for (step = 0; step <= function->maxlevel; step++) {
-        grad_count = get_degree_count(function->hierarchie[step]->grad);
+    for (level = 0; level <= function->maxlevel; level++) {
+        grad_count = get_degree_count(function->hierarchie[level]->grad);
         for (k = 0; k < grad_count; k++) {
-            for (n = 0, interval_element_count = get_interval_element_count(function->hierarchie[step]->vektor[k]); n < interval_element_count; n++) {
-                v = generate_folgenvector(function->hierarchie[step]->vektor[k], n);
-                pos_2 = v->array[0];
-                position = entry_d2one(v, function->hierarchie[step]->vektor[k]->lang);
-                vec_add2(v, function->hierarchie[step]->vektor[k]->start); // needed bc v starts from 0
-                if (step == function->maxlevel || !is_in_latter_interval(v, function->hierarchie[step+1]->vektor[k])) { // only set the vector if it is in the valid interval
-                    x = entry_one2d_sloppy(k, function->hierarchie[step]->grad); // don't care about 0 as entries
-                    function->hierarchie[step]->vektor[k]->glied[position] = integrate_coeff_discont(discont_function, pos_2 ,v->array[0], x->array[0], step, stepping);
-                    vec_del(x);
+            for (n = 0, interval_element_count = get_interval_element_count(function->hierarchie[level]->vektor[k]); n < interval_element_count; n++) {
+                v = generate_folgenvector(function->hierarchie[level]->vektor[k], n);
+                position = entry_d2one(v, function->hierarchie[level]->vektor[k]->lang);
+                pos_2 = v->array[0]; // position
+                vec_add2(v, function->hierarchie[level]->vektor[k]->start); // needed bc v starts from 0
+                if (level == function->maxlevel || !is_in_latter_interval(v, function->hierarchie[level+1]->vektor[k])) { // only set the vector if it is in the valid interval
+                    p = entry_one2d_sloppy(k, function->hierarchie[level]->grad); // degree - don't care about 0 as entries
+                    function->hierarchie[level]->vektor[k]->glied[position] = integrate_coeff_discont(discont_function, v->array[0], pos_2, p->array[0], level, stepping);
+                    vec_del(p);
                 }
                 vec_del(v);
             }
