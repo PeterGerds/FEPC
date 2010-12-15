@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de)
+ * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), 2010 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -113,6 +113,9 @@ func_grid_zero(func_p f);
 
 func_p
 func_factor_multi(func_p function, fepc_real_t factor);
+
+void
+funcs_del(func_p * array, int length);
 
 
 #endif

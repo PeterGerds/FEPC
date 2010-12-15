@@ -103,7 +103,6 @@ main(void) {
     set_gridstructure(w, function->intervals, stepping);
 
     convolution_result = faltung_fepc(f1, f2, w, stepping);
-
     //func_del(f1);
     //func_del(f2);
     //func_del(w);

@@ -243,7 +243,7 @@ folge_print(folge_p f, int info) {
 	if(info == 1) {
 		printf("\n\t#:glied");
 		for(k=0;k<size;k++) {
-			printf("\t%.3lf",f->glied[k]);
+			printf("\t%.5lf",f->glied[k]);
 		}
 	}
 	printf("\n------------------------------------------------------------\n");

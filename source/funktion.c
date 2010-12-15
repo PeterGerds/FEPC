@@ -406,3 +406,12 @@ func_factor_multi(func_p function, fepc_real_t factor) {
 	return back;
 }
 
+void
+funcs_del(func_p * array, int length) {
+	int n;
+
+	for (n = 0; n < length; n++) {
+		func_del(array[n]);
+	}
+	free(array);
+}
