@@ -37,9 +37,11 @@ main() {
 
 	int n, k, interval_count = 1;
 
-	int * maxlevels = int_array_new(10);
+	int * maxlevels_cp1 = int_array_new(rank1*dimension);
 
-	func_cp * cp1 = func_cp_new(rank1, dimension, maxlevels);
+	func_cp * cp1 = func_cp_new(rank1, dimension, maxlevels_cp1);
+
+	free(maxlevels_cp1);
 
 	for (n = 0; n < rank1; n++) {
 		for (k = 0; k < dimension; k++) {
@@ -47,8 +49,10 @@ main() {
 		}
 	}
 
-	func_cp * cp2 = func_cp_new(rank2, dimension, maxlevels);
-	free(maxlevels);
+	int * maxlevels_cp2 = int_array_new(rank2*dimension);
+
+	func_cp * cp2 = func_cp_new(rank2, dimension, maxlevels_cp2);
+	free(maxlevels_cp2);
 	for (n = 0; n < rank2; n++) {
 		for (k = 0; k < dimension; k++) {
 			setup_fepc_structure(&(cp2->functions[n*dimension+k]), id, &intervals, 1, 0, h);

@@ -43,7 +43,7 @@ func_cp *
 func_cp_new_blockstructure(int rank, int dimension, Funcimpl * functions, interval_p intervals, int * maxlevels) {
 	func_cp * result = func_cp_new(rank, dimension, maxlevels);
 
-
+	// TODO implement
 	return result;
 }
 
@@ -66,11 +66,19 @@ func_cp *
 func_cp_faltung(func_cp * function1, func_cp * function2, func_t * resulting_structure, fepc_real_t h) {
 	ASSERT(function1->dimension == function2->dimension);
 
-	int * maxlevels = int_array_new(100); // FIXME
+	int n, levels_count = function1->rank*function2->rank*function1->dimension;
+
+	int * maxlevels = (int*) malloc(sizeof(int)*levels_count);
+
+	for (n = 0; n < levels_count; n++) {
+		maxlevels[n] = resulting_structure[n % function1->dimension].maxlevel; // since the resulting structure is not BLOCK
+	}
 
 	func_cp * result = func_cp_new(function1->rank*function2->rank, function1->dimension, maxlevels);
 
-	int n, k, d;
+	free(maxlevels);
+
+	int k, d;
 
 	for (n = 0; n < function1->rank; n++) {
 		for (k = 0; k < function2->rank; k++) {
@@ -79,7 +87,7 @@ func_cp_faltung(func_cp * function1, func_cp * function2, func_t * resulting_str
 			}
 		}
 	}
-	free(maxlevels);
+
 	return result;
 }
 
@@ -93,7 +101,9 @@ func_cp *
 func_cp_multi(func_cp * function1, func_cp * function2, fepc_real_t h) {
 	ASSERT(function1->dimension == function2->dimension);
 
-	int * maxlevels = int_array_new(100); // FIXME
+	int levels_count = function1->rank*function2->rank*function1->dimension;
+
+	int * maxlevels = int_array_new(levels_count); // FIXME: this has to be the maximum over all levels in each entry
 
 	func_cp * result = func_cp_new(function1->rank*function2->rank, function1->dimension, maxlevels);
 
