@@ -120,7 +120,11 @@ fepc_real_t phi_l(int step, vec_p v, vec_p p, vec_real_p x, fepc_real_t stepping
  */
 void add_folgenentries(func_p function, Funcimpl function_impl, Funcimpl_step coeff_function, fepc_real_t stepping);
 
-func_p setup_fepc_structure(Funcimpl function, interval_p* intervals, int interval_count, int degree, fepc_real_t stepping);
+void
+setup_fepc_structure(func_t * func, Funcimpl function, interval_p* intervals, int interval_count, int degree, fepc_real_t stepping);
+
+func_p
+create_fepc_structure(Funcimpl function, interval_p* intervals, int interval_count, int degree, fepc_real_t stepping);
 
 vec_real_set_p get_value(func_p function, Funcimpl_vec_step generate_points, fepc_real_t stepping);
 

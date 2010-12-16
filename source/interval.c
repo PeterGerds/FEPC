@@ -23,22 +23,32 @@ interval_p
 interval_new(int dimension) {
     interval_p result = (interval_p) malloc(sizeof(interval_t));
     
-    result->dimension = dimension;
-    result->start = (fepc_real_t*) malloc(sizeof(fepc_real_t)*dimension);
-    result->end = (fepc_real_t*) malloc(sizeof(fepc_real_t)*dimension);
-    
-    int n;
-    
-    for (n = 0; n < dimension; n++) {
-        result->start[n] = 0.;
-    }
+    interval_init(result, dimension);
     return result;    
 }
 
+void
+interval_init(interval_p interval, int dimension) {
+	interval->dimension = dimension;
+	interval->start = (fepc_real_t*) malloc(sizeof(fepc_real_t)*dimension);
+	interval->end = (fepc_real_t*) malloc(sizeof(fepc_real_t)*dimension);
+
+	int n;
+
+	for (n = 0; n < dimension; n++) {
+		interval->start[n] = 0.;
+	}
+}
+
 void interval_del(interval_p interval) {
-    free(interval->start);
-    free(interval->end);
+    interval_clear(interval);
     free(interval);
+}
+
+void
+interval_clear(interval_t * interval) {
+	free(interval->start);
+	free(interval->end);
 }
 
 void intervals_del(interval_p* intervals, int interval_count) {
@@ -46,6 +56,15 @@ void intervals_del(interval_p* intervals, int interval_count) {
     
     for (n = 0; n < interval_count; n++) {
         interval_del(intervals[n]);
+    }
+    free(intervals);
+}
+
+void intervals_del_type(interval_t * intervals, int interval_count) {
+    int n;
+
+    for (n = 0; n < interval_count; n++) {
+        interval_clear(&intervals[n]);
     }
     free(intervals);
 }

@@ -59,9 +59,9 @@ main(void) {
     
 
     func_print(f1, 3);
-    func_print(setup_fepc_structure(x, function->intervals, 1, 1, stepping), 3);
+    func_print(create_fepc_structure(x, function->intervals, 1, 1, stepping), 3);
     
-    vec_real_set_p points = get_value(setup_fepc_structure(x, function->intervals, 1, 1, stepping), get_mean_points, stepping);
+    vec_real_set_p points = get_value(create_fepc_structure(x, function->intervals, 1, 1, stepping), get_mean_points, stepping);
     print_vec_real_set(points);
 	
 	discont_function_del(function);

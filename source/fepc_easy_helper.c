@@ -22,23 +22,31 @@
 
 func_p
 func_multi(func_p f, func_p g, fepc_real_t stepping) {
-    ASSERT(f != NULL && g != NULL);
-    ASSERT(f->dim == g->dim);
-    
-    folgen_vektor_p  temp;
-    
-    int n, k, l, m, steps;
-    
-    steps = (f->maxlevel > g->maxlevel ? f->maxlevel : g->maxlevel)+1;
-    
-    func_p result = func_new(steps-1, f->dim);
-    
-    for (n = 0; n < steps; n++) {
-        temp = folgen_vektor_multi( f->maxlevel < n ? NULL : f->hierarchie[n], g->maxlevel < n ? NULL : g->hierarchie[n], n, stepping );
-		folgen_vektor_del(result->hierarchie[n]);
-		result->hierarchie[n] = temp;
-    }
+	func_p result = func_new(f->maxlevel > g->maxlevel ? f->maxlevel : g->maxlevel, f->dim);
+
+	func_multi_overwrite(result, f, g, stepping);
     return result;
+}
+
+void
+func_multi_overwrite(func_t * result, func_p f, func_p g, fepc_real_t stepping) {
+	ASSERT(f != NULL && g != NULL);
+	ASSERT(f->dim == g->dim);
+
+	folgen_vektor_p  temp;
+
+	int n, k, l, m, steps;
+
+	steps = (f->maxlevel > g->maxlevel ? f->maxlevel : g->maxlevel)+1;
+
+	ASSERT(result->maxlevel == steps -1);
+	ASSERT(result->dim == f->dim);
+
+	for (n = 0; n < steps; n++) {
+	    temp = folgen_vektor_multi( f->maxlevel < n ? NULL : f->hierarchie[n], g->maxlevel < n ? NULL : g->hierarchie[n], n, stepping );
+	    folgen_vektor_del(result->hierarchie[n]);
+		result->hierarchie[n] = temp;
+	}
 }
 
 func_p

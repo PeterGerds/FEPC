@@ -76,10 +76,10 @@ int main() {
     
     //func_p func_9x1_sqr = setup_fepc_structure(nine_xone_sqr, intervals, 1, 0, stepping);
     
-    func_p func_function = setup_fepc_structure(function, intervals, 1, 0, stepping);
+    func_p func_function = create_fepc_structure(function, intervals, 1, 0, stepping);
     
     printf("Funktion 1 fertig\n");
-    func_p func_function_laplace = setup_fepc_structure(function_laplace, intervals, 1, 0, stepping);
+    func_p func_function_laplace = create_fepc_structure(function_laplace, intervals, 1, 0, stepping);
     printf("Funktion 2 fertig\n");
     func_p func_function_laplace_calc = func_laplace(func_function, stepping);
     printf("Laplace fertig\n");

@@ -49,7 +49,13 @@ func_p
 func_new(int maxlevel, int dim);
 
 void
+func_init(func_t * function, int maxlevel, int dimension);
+
+void
 func_del(func_p f);
+
+void
+func_clear(func_t * f);
 
 /* Funktion2 wird initialisiert. Beachte: alle Matritzen von Folgen der Funktion werden durch
 folgen_matrix_new( vec_new(dim), vec_new(dim) ) initialisiert. f = func2_new(maxlevel) bedeutet:
@@ -91,6 +97,9 @@ func_build( int maxlevel, int dim , int grad, int a, int n, int mod, bool_t rand
 func_p
 func_add(func_p f, func_p g);
 
+void
+func_add_overwrite(func_t * result, func_t * f, func_t * g);
+
 
 /* Funktion gibt die Anzahl der Freiheitsgrade der Funktionen f, g und w wieder */
 int
@@ -116,6 +125,9 @@ func_factor_multi(func_p function, fepc_real_t factor);
 
 void
 funcs_del(func_p * array, int length);
+
+void
+funcs_del_type(func_t * array, int length);
 
 
 #endif

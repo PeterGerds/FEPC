@@ -44,6 +44,9 @@ fepc_real_t folge_norm2(folge_p folge, int step, fepc_real_t stepping);
 folge_p
 folge_multi(folge_p f, folge_p g, int step, fepc_real_t stepping);
 
+void
+func_multi_overwrite(func_t * result, func_p f, func_p g, fepc_real_t stepping);
+
 folge_p
 folge_div(folge_p f, folge_p g, int step, fepc_real_t stepping);
 

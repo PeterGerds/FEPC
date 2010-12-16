@@ -280,17 +280,19 @@ void set_gridstructure(func_p function, interval_p* intervals, fepc_real_t stepp
         }
 
         folge = folge_new(start, lang);
-        for (k = 0, grad_count = get_degree_count(function->hierarchie[n]->grad); k < grad_count; k++) {
+        folge_del(function->hierarchie[n]->vektor[0]);
+        function->hierarchie[n]->vektor[0] = folge;
+        for (k = 1, grad_count = get_degree_count(function->hierarchie[n]->grad); k < grad_count; k++) {
             folge_del(function->hierarchie[n]->vektor[k]);
             function->hierarchie[n]->vektor[k] = folge_copy(folge);
-        }    
+        }
+
         #ifdef __DEBUG
         printf("set grid structure\n  start\n");
         print_vec(start);
         printf("  lang\n");
         print_vec(lang);
         #endif
-        folge_del(folge);
     }
 }
 
@@ -680,18 +682,26 @@ void set_degree(func_p function, int degree) {
 
 
 
-func_p setup_fepc_structure(Funcimpl function, interval_p* intervals, int interval_count, int degree, fepc_real_t stepping) {
-    func_p result = func_new(interval_count-1, intervals[interval_count-1]->dimension);
-    
-    if (degree > 0) {
-        set_degree(result, degree);
+void
+setup_fepc_structure(func_t * func, Funcimpl function, interval_p* intervals, int interval_count, int degree, fepc_real_t stepping) {
+    ASSERT(func->dim == intervals[interval_count-1]->dimension);
+    ASSERT(func->maxlevel == interval_count-1);
+	if (degree > 0) {
+        set_degree(func, degree);
     }
     
-    set_gridstructure(result, intervals, stepping); 
+    set_gridstructure(func, intervals, stepping);
     if (function != NULL) {
-        add_folgenentries(result, function, NULL, stepping);
+        add_folgenentries(func, function, NULL, stepping);
     }
-    return result;
+}
+
+func_t *
+create_fepc_structure(Funcimpl function, interval_p* intervals, int interval_count, int degree, fepc_real_t stepping) {
+	func_t * result = func_new(interval_count-1, intervals[interval_count-1]->dimension);
+
+	setup_fepc_structure(result, function, intervals, interval_count, degree, stepping);
+	return result;
 }
 
 fepc_real_t max(fepc_real_t a, fepc_real_t b) {
@@ -840,9 +850,9 @@ func_p fepc_easy(Funcimpl function1, interval_p* intervals1, int interval_count1
 
     func_p f, g, w, fepc;
        
-    f = setup_fepc_structure(function1, intervals1, interval_count1, degree_func1, stepping);
-    g = setup_fepc_structure(function2, intervals2, interval_count2, degree_func2, stepping);
-    w = setup_fepc_structure(NULL, intervals3, interval_count3, 0, stepping);
+    f = create_fepc_structure(function1, intervals1, interval_count1, degree_func1, stepping);
+    g = create_fepc_structure(function2, intervals2, interval_count2, degree_func2, stepping);
+    w = create_fepc_structure(NULL, intervals3, interval_count3, 0, stepping);
     
     fepc = faltung_fepc(f, g, w, stepping);
     func_del(f);

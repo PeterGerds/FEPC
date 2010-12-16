@@ -27,40 +27,42 @@ int
 main() {
 	fepc_real_t h = 0.2;
 
-	interval_p * intervals = (interval_p*) malloc(sizeof(interval_p)*1);
+	interval_t * intervals = (interval_t*) malloc(sizeof(interval_t)*1);
 
-	intervals[0] = interval_new(1);
-	intervals[0]->start[0] = -1.;
-	intervals[0]->end[0] = 1.;
+	interval_init(&intervals[0], 1);
+	intervals[0].start[0] = -1.;
+	intervals[0].end[0] = 1.;
 
 	int rank1 = 3, rank2 = 4, dimension = 2;
 
-	int n, k;
+	int n, k, interval_count = 1;
 
-	func_cp_p cp1 = func_cp_new(rank1, dimension);
+	int * maxlevels = int_array_new(10);
+
+	func_cp * cp1 = func_cp_new(rank1, dimension, maxlevels);
 
 	for (n = 0; n < rank1; n++) {
 		for (k = 0; k < dimension; k++) {
-			cp1->functions[n*dimension+k] = setup_fepc_structure(id, intervals, 1, 0, h);
+			setup_fepc_structure(&(cp1->functions[n*dimension+k]), id, &intervals, 1, 0, h);
 		}
 	}
 
-	func_cp_p cp2 = func_cp_new(rank2, dimension);
-
+	func_cp * cp2 = func_cp_new(rank2, dimension, maxlevels);
+	free(maxlevels);
 	for (n = 0; n < rank2; n++) {
 		for (k = 0; k < dimension; k++) {
-			cp2->functions[n*dimension+k] = setup_fepc_structure(id, intervals, 1, 0, h);
+			setup_fepc_structure(&(cp2->functions[n*dimension+k]), id, &intervals, 1, 0, h);
 		}
 	}
 
-	func_p * result_intervals = (func_p*) malloc(sizeof(func_p)*dimension);
+	func_t * result_intervals = (func_t*) malloc(sizeof(func_t)*dimension);
 
 	for (k = 0; k < dimension; k++) {
-		result_intervals[k] = func_new(0, 1);
-		set_gridstructure(result_intervals[k], intervals, h);
+		func_init(&result_intervals[k], 0, 1);
+		set_gridstructure(&result_intervals[k], &intervals, h);
 	}
 
-	func_cp_p result = func_cp_faltung(cp1, cp2, result_intervals, h);
+	func_cp * result = func_cp_faltung(cp1, cp2, result_intervals, h);
 
 
 	func_cp_del(cp1);
@@ -68,10 +70,9 @@ main() {
 
 	func_cp_print(result);
 
-	funcs_del(result_intervals, dimension);
-	intervals_del(intervals, 1);
+	funcs_del_type(result_intervals, dimension);
+	intervals_del_type(intervals, 1);
 	func_cp_del(result);
-
-
+	fftw_cleanup();
 	return 0;
 }

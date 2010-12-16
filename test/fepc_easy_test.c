@@ -481,8 +481,8 @@ void test_multi() {
     intervals[1]->end[0] = 0.4;
     intervals[1]->end[1] = 1.;
 
-    f = setup_fepc_structure(f_peter, intervals, steps_f, grad_f, STEPPING);
-    g = setup_fepc_structure(g_peter, intervals, steps_g, grad_g, STEPPING);
+    f = create_fepc_structure(f_peter, intervals, steps_f, grad_f, STEPPING);
+    g = create_fepc_structure(g_peter, intervals, steps_g, grad_g, STEPPING);
     multi = func_multi(f, g, STEPPING);
     
     vec_real_set_p points = get_value(multi, get_mean_points, STEPPING);
@@ -506,7 +506,7 @@ void test_norm() {
     intervals[0]->end[0] = 1.;
     intervals[0]->end[1] = 1.;
 
-    func_p function = setup_fepc_structure(const_1, intervals, 1, 0, STEPPING);
+    func_p function = create_fepc_structure(const_1, intervals, 1, 0, STEPPING);
     
     //func_print(function, 3);
     

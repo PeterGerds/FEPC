@@ -37,4 +37,7 @@ faltung_ref(func_p f, func_p g, func_p w, fepc_real_t h);
 func_p
 faltung_fepc(func_p f, func_p g, func_p w, fepc_real_t h);
 
+void
+faltung_fepc_overwrite(func_t * result, func_p f, func_p g, func_p w, fepc_real_t h);
+
 #endif

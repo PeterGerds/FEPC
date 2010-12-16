@@ -26,28 +26,45 @@
 typedef struct {
 	int rank;
 	int dimension;
-	func_p * functions;
-} func_cp_t;
+	func_t * functions;
+} func_cp;
 
-typedef func_cp_t * func_cp_p;
-
-func_cp_p
-func_cp_new(int rank, int dimension);
-
-func_p
-func_cp_extract(int current_rank, int current_dimension, func_cp_p func_cp);
+func_cp *
+func_cp_new(int rank, int dimension, int * maxlevels);
 
 void
-func_cp_del(func_cp_p func_cp);
+func_cp_init(func_cp * function, int rank, int dimension, int * maxlevels);
 
-func_cp_p
-func_cp_faltung(func_cp_p function1, func_cp_p function2, func_p * resulting_structure, fepc_real_t h);
 
-func_cp_p
-func_cp_multi(func_cp_p function1, func_cp_p function2, fepc_real_t h);
+/*func_add
+ * Each summand has a different interval
+ */
+func_cp *
+func_cp_new_blockstructure(int rank, int dimension, Funcimpl * functions, interval_t * intervals, int * maxlevels);
+
+/*
+ * Each summand has the same interval
+ */
+func_cp *
+func_cp_new_cp(int rank, int dimension, Funcimpl * functions, interval_t * interval, int * maxlevels);
+
+func_t *
+func_cp_extract(int current_rank, int current_dimension, func_cp * func_cp);
 
 void
-func_cp_print(func_cp_p function);
+func_cp_del(func_cp * func_cp);
+
+func_cp *
+func_cp_faltung(func_cp * function1, func_cp * function2, func_t * resulting_structure, fepc_real_t h);
+
+func_cp *
+func_cp_multi(func_cp * function1, func_cp * function2, fepc_real_t h);
+
+void
+func_cp_print(func_cp * function);
+
+int *
+int_array_new(int length);
 
 
 #endif // __FEPCCP
