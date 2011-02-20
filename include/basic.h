@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de)
+ * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), 2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,6 +20,10 @@
 #define __BASIC_H
 
 #include "config.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct {
 	int dim;				/* Dimension des Vektors */
@@ -161,6 +165,10 @@ print_vec_real(vec_real_p vector);
  */
 fepc_real_t 
 vec_real_norm(vec_real_p vector);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

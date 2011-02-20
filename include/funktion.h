@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), 2010 Stefan Handschuh (handschu@mis.mpg.de)
+ * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), 2010,2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,6 +20,10 @@
 #define __FUNKTION_H
 
 #include "folgen_vektor.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct {
 	int  dim;														/* beschreibt zugrundeliegende Dimension */
@@ -129,5 +133,8 @@ funcs_del(func_p * array, int length);
 void
 funcs_del_type(func_t * array, int length);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2010 Stefan Handschuh (handschu@mis.mpg.de)
+ * Copyright (C) 2010, 2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,6 +20,10 @@
 #define _FEPC_EASY_HELPER
 
 #include "fepc_easy.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 func_p
 func_multi(func_p f, func_p g, fepc_real_t stepping);
@@ -72,5 +76,8 @@ func_subtract2(func_p f, func_p g);
 fepc_real_t
 func_norm_l2_sqr(func_p function, fepc_real_t stepping);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

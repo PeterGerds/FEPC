@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2010 Stefan Handschuh (handschu@mis.mpg.de)
+ * Copyright (C) 2010, 2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,7 +21,9 @@
 
 #include "fepc_easy.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct {
 	int  summands;														
@@ -51,15 +53,8 @@ func_sparse_reflect(func_sparse_p f);
 func_sparse_p
 func_sparse_convolute(func_sparse_p f, func_sparse_p g, func_p * result_structure, fepc_real_t stepping);
 
-
-
-
-
-
-
-
-
-
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2010 Stefan Handschuh (handschu@mis.mpg.de)
+ * Copyright (C) 2010, 2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,6 +24,10 @@
 #define SQRT_12 3.464101615137754587054892683011744733885610507620761256111613958903866
 
 #include "fepc_easy.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct {
     fepc_real_t y_0;
@@ -97,5 +101,8 @@ discont_function_setup(discont_function_p function, int step, fepc_real_t start,
 void
 discont_function_setup_points(discont_function_p function, int step, fepc_real_t start, fepc_real_t end, fepc_real_t * y1, fepc_real_t * y2, fepc_real_t stepping);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

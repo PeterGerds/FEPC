@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2010 Stefan Handschuh (handschu@mis.mpg.de)
+ * Copyright (C) 2010, 2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,6 +24,10 @@
 #include <math.h>
 #include "faltung.h"
 #include "interval.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifndef INT_STEPS
 #define INT_STEPS 10
@@ -155,6 +159,10 @@ fepc_real_t max(fepc_real_t a, fepc_real_t b);
 int get_degree_count(vec_p degree);
 
 void set_degree(func_p function, int degree);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

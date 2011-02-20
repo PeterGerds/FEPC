@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2010 Stefan Handschuh (handschu@mis.mpg.de)
+ * Copyright (C) 2010, 2011 Stefan Handschuh (handschu@mis.mpg.de)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,6 +22,9 @@
 
 #include "fepc_easy.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct {
 	int rank;
@@ -66,5 +69,8 @@ func_cp_print(func_cp * function);
 int *
 int_array_new(int length);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif // __FEPCCP

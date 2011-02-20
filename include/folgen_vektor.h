@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de)
+ * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), 2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,6 +20,10 @@
 #define __FOLGEN_VEKTOR_H
 
 #include "folge.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct {
 	vec_p  grad;				/*Polynomgrad des Folgenvektors*/
@@ -107,6 +111,10 @@ folgen_vektor_factor_multi(folgen_vektor_p f, fepc_real_t a);
 /* Addition von Folgenmatritzen f und g */
 folgen_matrix_p
 folgen_matrix_add(folgen_matrix_p f, folgen_matrix_p g);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
