@@ -16,6 +16,3 @@ GNU Lesser General Public License for more details.
 To read the text of the GNU Lesser General Public License,
 see <http://www.gnu.org/licenses/>
 
-
-This library provides several classes representing tensors in different formats
-and algorithms to deal with them.
