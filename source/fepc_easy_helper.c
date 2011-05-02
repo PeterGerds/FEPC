@@ -236,6 +236,7 @@ folge_multi(folge_p f, folge_p g, int step, fepc_real_t stepping) {
 		return back;
 	}
 
+	fepc_real_t norm = folge_norm2(g, step, stepping);
 	if( (size_g!=0) && (size_f!=0) ) {
 		min = vec_min( f->start, f->start );
 		temp1 = vec_add( f->start, f->lang );
@@ -255,7 +256,7 @@ folge_multi(folge_p f, folge_p g, int step, fepc_real_t stepping) {
 			y = folge_glied( r, g );
 			//print_vec(r);
 			vec_del( r );
-			back->glied[k] = x*y*folge_norm2(g, step, stepping);
+			back->glied[k] = x*y*norm;
 			//printf("%i\t%f\t%f\n", step, x, y);
 		}
 		return back;
@@ -282,6 +283,8 @@ folge_div(folge_p f, folge_p g, int step, fepc_real_t stepping) {
 		return back;
 	}
 
+	fepc_real_t norm = folge_norm2(g, step, stepping);
+
 	if( (size_g!=0) && (size_f!=0) ) {
 		min = vec_min( f->start, g->start );
 		temp1 = vec_add( f->start, f->lang );
@@ -300,7 +303,7 @@ folge_div(folge_p f, folge_p g, int step, fepc_real_t stepping) {
 			x = folge_glied( r, f );
 			y = folge_glied( r, g );
 			vec_del( r );
-			back->glied[k] = x == 0. ? 0. : x/(y*folge_norm2(g, step, stepping));
+			back->glied[k] = x == 0. ? 0. : x/(y*norm);
 		}
 		return back;
 	}

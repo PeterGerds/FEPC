@@ -682,6 +682,17 @@ void set_degree(func_p function, int degree) {
 
 
 
+/**
+ * Sets up the needed structure from human readable intervals.
+ *
+ * @param func           function that should be set up
+ * @param function       R^n -> R function
+ * @param intervals      human readable inverals
+ * @param interval_count number of intervals
+ * @param degree         degree of the function (0 for piecewise constant)
+ * @param stepping       stepping
+ *
+ */
 void
 setup_fepc_structure(func_t * func, Funcimpl function, interval_p* intervals, int interval_count, int degree, fepc_real_t stepping) {
     ASSERT(func->dim == intervals[interval_count-1]->dimension);
@@ -695,6 +706,18 @@ setup_fepc_structure(func_t * func, Funcimpl function, interval_p* intervals, in
         add_folgenentries(func, function, NULL, stepping);
     }
 }
+
+/**
+ * Creates a functions and sets up the correct fepc structure.
+ *
+ * @param function       R^n -> R function
+ * @param intervals      human readable inverals
+ * @param interval_count number of intervals
+ * @param degree         degree of the function (0 for piecewise constant)
+ * @param stepping       stepping
+ *
+ * @return setted up function
+ */
 
 func_t *
 create_fepc_structure(Funcimpl function, interval_p* intervals, int interval_count, int degree, fepc_real_t stepping) {
@@ -757,6 +780,15 @@ vec_p getPredeccessor(vec_p v, int position, folge_p folge, int direction) {
     return NULL;
 }
 
+/**
+ * Derives a function in the given direction.
+ *
+ * @param function  function to derive
+ * @param direction direction of the derivative
+ * @param stepping  stepping
+ *
+ * @return derived function in the direction
+ */
 func_p func_derive(func_p function, int direction, fepc_real_t stepping) {
     ASSERT(function->dim > direction);
 
@@ -807,6 +839,14 @@ func_p func_derive(func_p function, int direction, fepc_real_t stepping) {
     
 }
 
+/**
+ * Computes the laplacian of a given function.
+ *
+ * @param function function that will be 'laplaced'
+ * @param stepping stepping
+ *
+ * @return laplacian of the given function
+ */
 func_p func_laplace(func_p function, fepc_real_t stepping) {
     func_p result, temp1, temp2;
     
