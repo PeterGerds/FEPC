@@ -419,7 +419,8 @@ folge_subtract(folge_p f, folge_p g) {
 	size_f = vec_size( f->lang );
 	size_g = vec_size( g->lang );
 	if(size_f == 0) {
-		back = folge_copy( g ); // TODO multiply with -1
+		back = folge_copy( g );
+		folge_multi_factor(back, -1);
 		return back;
 	}
 
