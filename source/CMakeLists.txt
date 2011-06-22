@@ -8,6 +8,10 @@ LIST(REMOVE_ITEM ALL_HEADER_FILES ${CMAKE_SOURCE_DIR}/include/gauss.h)
 	
 ADD_LIBRARY(fepc SHARED ${ALL_SOURCE_FILES} ${ALL_HEADER_FILES})
 
+add_executable (main main)
+target_link_libraries (main fepc fftw3 m)
+
+
 if (EXISTS ${CMAKE_SOURCE_DIR}/include/gauss.h)
 	ADD_LIBRARY(gauss SHARED gauss.c ${CMAKE_SOURCE_DIR}/include/gauss.h)
 endif()
