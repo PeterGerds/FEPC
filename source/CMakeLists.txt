@@ -1,18 +1,30 @@
-file(GLOB ALL_SOURCE_FILES *.c)
+set(ALL_SOURCE_FILES
+        basic.c
+        faltung_hilfe.c
+        folge.c
+        fepc_cp.c
+        folgen_vektor.c
+        fepc_easy.c
+        funktion.c
+        fepc_easy_helper.c
+        interval.c
+        discont.c
+        fepc_easy_sparse.c
+        koeffizienten.c
+        seconds.c
+        faltung.c
+        kuerzen.c)
 
-# Find all header files in the include directory
-file(GLOB ALL_HEADER_FILES ${CMAKE_SOURCE_DIR}/include/*.h)
+if (HAS_FFTW3)
+    set(ALL_SOURCE_FILES fft_faltung.c ${ALL_SOURCE_FILES})
+endif(HAS_FFTW3)
 
-LIST(REMOVE_ITEM ALL_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/gauss.c)
-LIST(REMOVE_ITEM ALL_HEADER_FILES ${CMAKE_SOURCE_DIR}/include/gauss.h)
-	
-ADD_LIBRARY(fepc SHARED ${ALL_SOURCE_FILES} ${ALL_HEADER_FILES})
+ADD_LIBRARY(fepc SHARED ${ALL_SOURCE_FILES})
 
-add_executable (main main)
-target_link_libraries (main fepc fftw3 m)
+add_executable (main main.c)
+target_link_libraries(main fepc m)
 
-
-if (EXISTS ${CMAKE_SOURCE_DIR}/include/gauss.h)
-	ADD_LIBRARY(gauss SHARED gauss.c ${CMAKE_SOURCE_DIR}/include/gauss.h)
-endif()
+if (HAS_FFTW3)
+    target_link_libraries(main fftw3)
+endif(HAS_FFTW3)
 

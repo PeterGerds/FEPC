@@ -18,6 +18,10 @@
 
 #include "folge.h"
 
+#ifdef HAS_FFTW3
+#include "fft_faltung.h"
+#endif
+
 
 /*******************************************************
  *
@@ -160,6 +164,7 @@ folge_slow_faltung(folge_p f,folge_p g) {
 
 folge_p
 folge_faltung(folge_p f,folge_p g) {
+#ifdef HAS_FFTW3
 	folge_p  back;
 	int  k;
 	int  size_f, size_g, dim;
@@ -219,6 +224,9 @@ folge_faltung(folge_p f,folge_p g) {
 	back->glied = w_glied;
 
 	return back;
+#else
+    return folge_slow_faltung(f, g);
+#endif
 }
 
 

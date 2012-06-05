@@ -19,7 +19,7 @@
 #ifndef __FOLGE_H
 #define __FOLGE_H
 
-#include "fft_faltung.h"
+#include "basic.h"
 
 #ifdef __cplusplus
 extern "C" {

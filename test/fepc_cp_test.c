@@ -77,6 +77,8 @@ main() {
 	funcs_del_type(result_intervals, dimension);
 	intervals_del_type(intervals, 1);
 	func_cp_del(result);
+#ifdef HAS_FFTW3
 	fftw_cleanup();
+#endif
 	return 0;
 }
