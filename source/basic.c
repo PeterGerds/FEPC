@@ -75,8 +75,6 @@ vec_one(int dim) {
 }
 
 
-
-
 void
 vec_del(vec_p s) {
 	free(s->array);
@@ -150,6 +148,30 @@ entry_one2d(int pos,vec_p n) {
 }
 
 vec_p
+entry_one2d_sloppy(int pos,vec_p n) {
+	int  k, size, test;
+	vec_p  s;
+
+	size = vec_size( n );
+	ASSERT(pos >= 0);
+
+	/*Berechnung*/
+	s = vec_new( n->dim );
+
+	for(k=s->dim-1;k>=1;k--) {
+	    if (n->array[k] == 0) {
+	        s->array[k] = 0;
+	    } else {
+	        s->array[k] = pos % n->array[k];
+		    pos = (pos - s->array[k]) / n->array[k];
+	    }
+	}
+	s->array[0] = pos;
+
+	return s;
+}
+
+vec_p
 vec_add(vec_p s, vec_p n) {
 	int  k;
 	vec_p  back;
@@ -160,6 +182,33 @@ vec_add(vec_p s, vec_p n) {
 	back = vec_new( s->dim );
 	for(k=0; k<back->dim;k++) {
 		back->array[k] = n->array[k] + s->array[k];
+	}
+	return back;
+}
+
+void
+vec_add2(vec_p s, vec_p n) {
+	int  k;
+	
+	/*Testen auf Konsistenz (siehe Dokumentation)*/
+	ASSERT( s->dim == n->dim );
+
+	for(k=0; k<s->dim;k++) {
+		s->array[k] += n->array[k];
+	}
+}
+
+vec_real_p
+vec_real_substract(vec_real_p s, vec_real_p n) {
+	int  k;
+	vec_real_p  back;
+
+	/*Testen auf Konsistenz (siehe Dokumentation)*/
+	ASSERT( s->dim == n->dim );
+
+	back = vec_real_new( s->dim );
+	for(k=0; k<back->dim;k++) {
+		back->array[k] = s->array[k] - n->array[k];
 	}
 	return back;
 }
@@ -189,6 +238,29 @@ vec_div(int a, vec_p n) {
 	return back;
 }
 
+
+vec_real_p
+vec_real_multi(fepc_real_t factor, vec_real_p vector) {
+    int n;
+    
+    vec_real_p back = vec_real_new(vector->dim);
+    
+    for (n = 0; n < vector->dim; n++) {
+        back->array[n] = vector->array[n]*factor;
+    }
+    return back;
+}
+
+
+void
+vec_real_multi2(fepc_real_t factor, vec_real_p vector){
+    int n;
+    
+    for (n = 0; n < vector->dim; n++) {
+        vector->array[n] *= factor;
+    }
+}
+
 vec_p
 vec_copy(vec_p n) {
 	int  k;
@@ -211,6 +283,21 @@ vec_skalar_prod(vec_p r, vec_p s) {
 	sum = 0;
 	for(k=0;k<s->dim;k++) {
 		sum = sum + r->array[k] * s->array[k];
+	}
+	return sum;
+}
+
+fepc_real_t
+vec_real_skalar_prod(vec_real_p r, vec_real_p s) {
+	int  k;
+	
+	fepc_real_t sum = 0.;
+
+	/*Testen auf Konsistenz (siehe Dokumentation)*/
+	ASSERT( s->dim == r->dim );
+
+	for(k=0;k<s->dim;k++) {
+		sum += r->array[k] * s->array[k];
 	}
 	return sum;
 }
@@ -266,6 +353,7 @@ vec_size(vec_p r) {
 	}
 	return prod;
 }
+
 
 
 
@@ -442,3 +530,33 @@ vec_0_s_r(vec_p r, vec_p n) {
 	vec_del( modulo );
 	return back;
 }
+
+
+
+void 
+print_vec(vec_p vector) {
+    int n;
+    
+    for (n = 0; n < vector->dim; n++) {
+        printf("\t%i\n", vector->array[n]);
+    }
+}
+
+
+
+void 
+print_vec_real(vec_real_p vector) {
+    int n;
+    
+    for (n = 0; n < vector->dim; n++) {
+        printf("\t%f\n", vector->array[n]);
+    }
+}
+
+fepc_real_t
+vec_real_norm(vec_real_p vector) {
+    return sqrt(vec_real_skalar_prod(vector, vector));;
+}
+
+
+

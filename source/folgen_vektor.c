@@ -95,8 +95,6 @@ folgen_vektor_del(folgen_vektor_p f) {
 
 
 
-
-
 folgen_matrix_p
 folgen_matrix_new(vec_p grad1, vec_p grad2) {
 	folgen_matrix_p  back;
@@ -514,6 +512,87 @@ folgen_vektor_add(folgen_vektor_p f, folgen_vektor_p g) {
 	return back;
 }
 
+folgen_vektor_p
+folgen_vektor_subtract(folgen_vektor_p f, folgen_vektor_p g) {
+	folgen_vektor_p  back;
+	int  k, d, size, dim, a, b, test_f, test_g;
+	vec_p  max, vec_1, n, n_f, n_g, r;
+
+	ASSERT( f->grad->dim == g->grad->dim );
+	dim = f->grad->dim;
+	max = vec_max( f->grad, g->grad );
+
+
+	vec_1 = vec_one( dim );
+	n = vec_add( vec_1, max );
+	n_f = vec_add( vec_1, f->grad );
+	n_g = vec_add( vec_1, g->grad );
+	size = vec_size( n );
+
+	back = folgen_vektor_new( max );
+	
+	folge_p temp;
+	
+	for(k=0;k<size;k++) {
+		r = entry_one2d( k, n );
+		test_f = 0;
+		test_g = 0;
+		for(d=0;d<dim;d++) {
+			if( r->array[d] > f->grad->array[d] ) {
+				test_f = test_f + 1;
+			}
+			if( r->array[d] > g->grad->array[d] ) {
+				test_g = test_g + 1;
+			}
+		}
+		if( (test_f == 0) && (test_g == 0) ) {
+			a = entry_d2one( r, n_f );
+			b = entry_d2one( r, n_g );
+			folge_del( back->vektor[k] );
+			back->vektor[k] = folge_subtract( f->vektor[a], g->vektor[b] );
+		}
+		if( (test_f != 0) && (test_g == 0) ) {
+			b = entry_d2one( r, n_g );
+			folge_del( back->vektor[k] );
+			temp = folge_copy( g->vektor[b] );
+			back->vektor[k] =  folge_multi_factor(temp, -1.);
+			folge_del(temp); 
+		}
+		if( (test_f == 0) && (test_g != 0) ) {
+			a = entry_d2one( r, n_f );
+			folge_del( back->vektor[k] );
+			back->vektor[k] = folge_copy( f->vektor[a] );
+		}
+		vec_del( r );
+	}
+	vec_del( n );
+	vec_del( n_f );
+	vec_del( n_g );
+	vec_del( vec_1 );
+
+	return back;
+}
+
+folgen_vektor_p
+folgen_vektor_factor_multi(folgen_vektor_p f, fepc_real_t factor) {
+    folgen_vektor_p  back;
+	int  k, size;
+	vec_p vec_1, n;
+	
+	vec_1 = vec_one( f->grad->dim );
+	n = vec_add( vec_1, f->grad );
+	vec_del(vec_1);
+	size = vec_size( n );
+    vec_del(n);
+	back = folgen_vektor_new( f->grad );
+	
+	
+	for(k=0;k<size;k++) {
+		back->vektor[k] = folge_multi_factor(f->vektor[k], factor);
+	}
+	return back;
+
+}
 
 
 
@@ -607,3 +686,26 @@ folgen_matrix_add(folgen_matrix_p f, folgen_matrix_p g) {
 
 	return back;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

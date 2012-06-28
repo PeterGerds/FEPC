@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de)
+ * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), 2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,23 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <sys/time.h>
-#include <time.h>
+#ifndef __SECONDS_H
+#define __SECONDS_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
  * return time in seconds used by program
  */
 
 double
-seconds ()
-{
-    double  sec, usec;
-    struct  timeval  tvd;
+seconds ();
 
-    gettimeofday( & tvd, NULL );
-
-    sec  = tvd.tv_sec;
-    usec = tvd.tv_usec;
-
-    return sec + (usec * 1e-6);
+#ifdef __cplusplus
 }
+#endif
+
+#endif

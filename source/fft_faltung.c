@@ -1,6 +1,7 @@
 /*
  * FEPC
  * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de)
+ *               2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,11 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if defined(HAS_FFTW3)
 #include <fftw3.h>
-
-#endif
-
 #include "fft_faltung.h"
 
 
@@ -41,14 +38,14 @@
  *******************************************************/
 fepc_real_t*
 fft_faltung(fepc_real_t* a, vec_p n_a, fepc_real_t* b, vec_p n_b) {
-#if defined(HAS_FFTW3)
-
 	int  size_a, size_b, size_c, dim;
 	int  k, i, wert, test;
 	int  *n;
 	vec_p  temp, n_c;
 	fepc_real_t  *c;
-	fftw_complex  *in, *out,*in_a, *out_a, *in_b, *out_b;
+	fftw_complex  *in, *out_a, *out_b;
+	double *out, *in_a, *in_b;
+
 	fftw_plan  p;
 
 
@@ -72,7 +69,7 @@ fft_faltung(fepc_real_t* a, vec_p n_a, fepc_real_t* b, vec_p n_b) {
 
 
 	/*Berechnen der Fouriertrafo von in_a*/
-	in_a = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * size_c);
+	in_a = (double*) fftw_malloc(sizeof(double) * size_c);
 	out_a = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * size_c);
 	for (k=0;k<size_c;k++) {
 		temp = entry_one2d(k,n_c);
@@ -84,22 +81,20 @@ fft_faltung(fepc_real_t* a, vec_p n_a, fepc_real_t* b, vec_p n_b) {
 		}
 		if (test == 0) {
 			wert = entry_d2one(temp,n_a);
-			in_a[k][0] = a[wert];
-			in_a[k][1] = 0;
+			in_a[k] = a[wert];
 		}
 		else {
-			in_a[k][0] = 0;
-			in_a[k][1] = 0;
+			in_a[k] = 0;
 		}
 		vec_del(temp);
 	}
-	p = fftw_plan_dft(dim,n,in_a,out_a,FFTW_FORWARD,FFTW_ESTIMATE);
+	p = fftw_plan_dft_r2c(dim,n,in_a,out_a,FFTW_ESTIMATE);
 	fftw_execute(p);
 	fftw_destroy_plan(p);
 
 
 	/*Berechnen der Fouriertrafo von in_b*/
-	in_b = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * size_c);
+	in_b = (double*) fftw_malloc(sizeof(double) * size_c);
 	out_b = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * size_c);
 	for (k=0;k<size_c;k++) {
 		temp = entry_one2d(k,n_c);
@@ -111,23 +106,21 @@ fft_faltung(fepc_real_t* a, vec_p n_a, fepc_real_t* b, vec_p n_b) {
 		}
 		if (test == 0) {
 			wert = entry_d2one(temp,n_b);
-			in_b[k][0] = b[wert];
-			in_b[k][1] = 0;
+			in_b[k] = b[wert];
 		}
 		else {
-			in_b[k][0] = 0;
-			in_b[k][1] = 0;
+			in_b[k] = 0;
 		}
 		vec_del(temp);
 	}
 
-	p = fftw_plan_dft(dim,n,in_b,out_b,FFTW_FORWARD,FFTW_ESTIMATE);
+	p = fftw_plan_dft_r2c(dim,n,in_b,out_b,FFTW_ESTIMATE);
 	fftw_execute(p);
 	fftw_destroy_plan(p);
 
 
 	in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * size_c);
-	out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * size_c);
+	out = (double*) fftw_malloc(sizeof(double) * size_c);
 
 	for (k=0;k<size_c;k++) {
 		in[k][0] = out_a[k][0]*out_b[k][0] - out_a[k][1]*out_b[k][1];
@@ -135,28 +128,21 @@ fft_faltung(fepc_real_t* a, vec_p n_a, fepc_real_t* b, vec_p n_b) {
 	}
 
 	/*Berechnung der Inversen Fouriertrafo von in*/
-	p = fftw_plan_dft(dim,n,in,out,FFTW_BACKWARD,FFTW_ESTIMATE);
+	p = fftw_plan_dft_c2r(dim,n,in,out,FFTW_ESTIMATE);
 	fftw_execute(p);
 	fftw_destroy_plan(p);
 
 	for (k=0;k<size_c;k++) {
-		c[k] = (fepc_real_t) out[k][0]/size_c;
+		c[k] = (fepc_real_t) out[k]/size_c;
 	}
 
 	vec_del(n_c);
 	fftw_free(in);
-	fftw_free(in_a);
-	fftw_free(in_b);
-	fftw_free(out);
+	free(in_a);
+	free(in_b);
+	free(out);
 	fftw_free(out_a);
 	fftw_free(out_b);
 	return c;
-
-
-
-#else
-    printf( "\n (fft_faltung) FEHLER : keine FFT Bibliothek verfuegbar\n" );
-
-    exit( 1 );
-#endif
 }
+

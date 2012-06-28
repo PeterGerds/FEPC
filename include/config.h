@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de)
+ * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), 2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,11 +34,22 @@
 #include <math.h>
 #include "seconds.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * basic types
  */
 
-typedef enum { false, true } bool_t;
+/*
+ * Adds c++ compatibility
+ */
+#if !defined(__cplusplus)
+	typedef enum { false, true } bool_t;
+#else
+	typedef bool bool_t;
+#endif
 
 typedef double  fepc_real_t;
 
@@ -69,4 +80,7 @@ typedef double  fepc_real_t;
 #define _INLINE_  static
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 #endif  /* __CONFIG_H */

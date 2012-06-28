@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de)
+ * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), Stefan Handschuh 2011 (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,6 +20,10 @@
 #define __KUERZEN_H
 
 #include "faltung_hilfe.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Diese Struktur dient der Charakterisierung des Traegers mehrerer Folgenvektoren. Die Struktur dient der Umsetzung der Ergebnisse,
  die in der Dokumentation zum Kapitel "Einkuerzung" gemacht wurden. Ausgehend von einer gegebenen Funktion f des Maxlevel L werden fuer

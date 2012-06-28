@@ -392,3 +392,8 @@ matrix3_del(matrix3_p matrix) {
 	free(matrix->a);
 	free(matrix);
 }
+
+
+
+
+

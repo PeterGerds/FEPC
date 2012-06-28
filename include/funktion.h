@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de)
+ * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), 2010,2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,6 +20,10 @@
 #define __FUNKTION_H
 
 #include "folgen_vektor.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct {
 	int  dim;														/* beschreibt zugrundeliegende Dimension */
@@ -49,7 +53,13 @@ func_p
 func_new(int maxlevel, int dim);
 
 void
+func_init(func_t * function, int maxlevel, int dimension);
+
+void
 func_del(func_p f);
+
+void
+func_clear(func_t * f);
 
 /* Funktion2 wird initialisiert. Beachte: alle Matritzen von Folgen der Funktion werden durch
 folgen_matrix_new( vec_new(dim), vec_new(dim) ) initialisiert. f = func2_new(maxlevel) bedeutet:
@@ -68,7 +78,8 @@ func2_del(func2_p f);
 func_p
 func_projekt(func_p f,func_p g);
 
-
+func_p
+func_clone(func_p f);
 
 /* Gibt die einzelnen Details einer Funktion auf dem Bildschirm wieder. Je groesser der Wert info ist, umso mehr
  Informationen werden wiedergegeben. 0, 1, 2, 3 sind moegliche Infowerte. 0 wenig Info, 3 viele Infos */
@@ -90,6 +101,10 @@ func_build( int maxlevel, int dim , int grad, int a, int n, int mod, bool_t rand
 func_p
 func_add(func_p f, func_p g);
 
+void
+func_add_overwrite(func_t * result, func_t * f, func_t * g);
+
+
 /* Funktion gibt die Anzahl der Freiheitsgrade der Funktionen f, g und w wieder */
 int
 func_count( func_p f, func_p g, func_p w );
@@ -108,5 +123,18 @@ func_modell_count( func_p f, func_p g, func_p w );
 void
 func_grid_zero(func_p f);
 
+
+func_p
+func_factor_multi(func_p function, fepc_real_t factor);
+
+void
+funcs_del(func_p * array, int length);
+
+void
+funcs_del_type(func_t * array, int length);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

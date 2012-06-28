@@ -1,0 +1,11 @@
+*CMakeFiles
+*CMakeCache.txt
+.cproject
+.project
+*.cmake
+Makefile
+source/main
+source/libfepc.so
+test/*test
+*Testing
+

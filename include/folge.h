@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de)
+ * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), 2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,11 @@
 #ifndef __FOLGE_H
 #define __FOLGE_H
 
-#include "fft_faltung.h"
+#include "basic.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct {
 	vec_p start;				/* Startvektor der Folge */
@@ -69,6 +73,10 @@ folge_norm(folge_p f, folge_p g);
 folge_p
 folge_add(folge_p f, folge_p g);
 
+/* Subtraktion von Folgen f und g */
+folge_p
+folge_subtract(folge_p f, folge_p g);
+
 /* Rueckgabe einer einer Kopie der Folge f */
 folge_p
 folge_copy( folge_p f);
@@ -78,7 +86,13 @@ folge_copy( folge_p f);
 folge_p
 folge_projekt(folge_p f, folge_p g);
 
+folge_p
+folge_multi_factor(folge_p folge, fepc_real_t factor);
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif
+
+

@@ -16,13 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __FFT_FALTUNG_H
-#define __FFT_FALTUNG_H
+#include <sys/time.h>
+#include <time.h>
 
-#include "basic.h"
+/*
+ * return time in seconds used by program
+ */
 
-/*Berechnung der Faltung von zwei Arrays ueber die Fouriertransformation*/
-fepc_real_t*
-fft_faltung(fepc_real_t* a, vec_p n_a, fepc_real_t* b, vec_p n_b);
+double
+seconds ()
+{
+    double  sec, usec;
+    struct  timeval  tvd;
 
-#endif
+    gettimeofday( & tvd, NULL );
+
+    sec  = tvd.tv_sec;
+    usec = tvd.tv_usec;
+
+    return sec + (usec * 1e-6);
+}
+

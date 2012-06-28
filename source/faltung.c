@@ -614,7 +614,16 @@ faltung_ref(func_p f, func_p g, func_p w, fepc_real_t h) {
 
 func_p
 faltung_fepc(func_p f, func_p g, func_p w, fepc_real_t h) {
-	func_p  back, temp1, temp2;
+	func_p back = func_new(w->maxlevel, w->dim);
+
+	faltung_fepc_overwrite(back, f, g, w, h);
+	return back;
+}
+
+void
+faltung_fepc_overwrite(func_t * result, func_p f, func_p g, func_p w, fepc_real_t h) {
+	func_p temp1, temp2;
+
 	int  k, maxgrad_1dim, dim;
 	vec_p  maxgrad, p;
 	matrix_p xi_koef;
@@ -647,32 +656,30 @@ faltung_fepc(func_p f, func_p g, func_p w, fepc_real_t h) {
 		vec_del( maxgrad );
 		maxgrad = p;
 	}
-
 	maxgrad_1dim = 0;
 	for(k=0;k<dim;k++) {
 		if( maxgrad_1dim < maxgrad->array[k] ) {
 			maxgrad_1dim = maxgrad->array[k];
 		}
 	}
-
 	/*Berechnung der eindimensionalen Xi-Koeffizienten*/
 	xi_koef = koeffizienten_xi_1dim( 2 * maxgrad_1dim + 1 );
 	/*Berechnung der eindimensionalen Gamma-Koeffizienten*/
 	gamma_koef = koeffizienten_gamma_1dim( 2 * maxgrad_1dim + 1 );
-
 	/*Berechnung der Faltung*/
 	temp1 = faltung_sum1( f, g, w, mesh, maxgrad, gamma_koef, xi_koef );
 	temp2 = faltung_sum2( f, g, w, mesh, maxgrad, gamma_koef, xi_koef );
-	back = func_add( temp1, temp2 );
-
+	func_add_overwrite(result, temp1, temp2 );
 	vec_del( maxgrad );
 	func_del( temp1 );
 	func_del( temp2 );
 	matrix3_del( gamma_koef );
 	matrix_del( xi_koef );
 	vec_real_del( mesh );
-
 	/*Folgenwerte, die sich auf Intervallen befinden, welche verfeinert werden, werden gleich Null gesetzt*/
-	func_grid_zero( back );
-	return back;
+	func_grid_zero( result );
 }
+
+
+
+

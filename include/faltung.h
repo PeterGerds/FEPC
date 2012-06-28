@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de)
+ * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), 2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +21,10 @@
 
 #include "kuerzen.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Berechnet die Projektion der Faltung der Funktionen f und g auf die Gitterstruktur von w.
  Von f und g sind die Gitterstrukturen sowie die dazugehoerigen Eintraege gegeben. Von w ist
  nur die Gitterstruktur gegeben.
@@ -36,5 +40,12 @@ faltung_ref(func_p f, func_p g, func_p w, fepc_real_t h);
 /* Berechnung der FEPC-Faltung */
 func_p
 faltung_fepc(func_p f, func_p g, func_p w, fepc_real_t h);
+
+void
+faltung_fepc_overwrite(func_t * result, func_p f, func_p g, func_p w, fepc_real_t h);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

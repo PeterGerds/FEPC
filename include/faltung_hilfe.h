@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de)
+ * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), 2011 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +21,9 @@
 
 #include "koeffizienten.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Berechnung der Prolongation siehe Dokumentation */
 folgen_vektor_p
@@ -57,5 +60,18 @@ faltung_hilfe_Gamma_bauen_1( func_p g, vec_real_p mesh, vec_p maxgrad, matrix3_p
 func2_p
 faltung_hilfe_Gamma_bauen_2( func_p g, vec_real_p mesh, vec_p maxgrad, matrix3_p gamma_koef, matrix_p xi_koef );
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif
+
+
+
+
+
+
+
+
+
+

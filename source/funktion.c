@@ -1,6 +1,6 @@
 /*
  * FEPC
- * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de)
+ * Copyright (C) 2009 Peter Gerds (gerds@mis.mpg.de), 2010 Stefan Handschuh (handschu@mis.mpg.de)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,15 +38,20 @@
 
 func_p
 func_new(int maxlevel, int dim) {
-	func_p  back;
+	func_p back = (func_p) malloc(sizeof(func_t));
+	func_init(back, maxlevel, dim);
+	return back;
+}
+
+void
+func_init(func_t * function, int maxlevel, int dim) {
 	folgen_vektor_p  *hierarchie;
 	int  k;
 	vec_p  grad;
 
 	ASSERT(maxlevel >= 0);
 	ASSERT(dim > 0);
-	back = (func_p) malloc(sizeof(func_t));
-	ASSERT(back != NULL);
+	ASSERT(function != NULL);
 
 	hierarchie = (folgen_vektor_p*) malloc(sizeof(folgen_vektor_p)*(maxlevel+1));
 	ASSERT(hierarchie != NULL);
@@ -56,23 +61,27 @@ func_new(int maxlevel, int dim) {
 		grad = vec_new(dim);
 		hierarchie[k] = folgen_vektor_new(grad);
 	}
-	back->hierarchie = hierarchie;
-	back->maxlevel = maxlevel;
-	back->dim = dim;
-	return back;
+	function->hierarchie = hierarchie;
+	function->maxlevel = maxlevel;
+	function->dim = dim;
 }
-
-
 
 void
 func_del(func_p f) {
+    if (f && f != NULL) {
+        func_clear(f);
+	    free(f);
+    }
+}
+
+void
+func_clear(func_t * f) {
 	int  k;
 
 	for(k=0;k<=f->maxlevel;k++) {
 		folgen_vektor_del(f->hierarchie[k]);
 	}
 	free(f->hierarchie);
-	free(f);
 }
 
 
@@ -140,6 +149,10 @@ func_projekt(func_p f,func_p g) {
 	return back;
 }
 
+func_p
+func_clone(func_p f) {
+    return func_projekt(f, f);
+}
 
 
 
@@ -189,40 +202,39 @@ func_build( int maxlevel, int dim , int grad, int a, int n, int mod, bool_t rand
 }
 
 
-
-
 func_p
 func_add(func_p f, func_p g) {
-	func_p  back;
-	int  k, maxlevel, dim;
+	ASSERT(f->dim == g->dim);
+
+	func_p back = func_new( f->maxlevel < g->maxlevel ? g->maxlevel : f->maxlevel, f->dim);
+	func_add_overwrite(back, f, g);
+	return back;
+}
+
+void
+func_add_overwrite(func_t * result, func_t * f, func_t * g) {
+	int  k, maxlevel;
+
 	folgen_vektor_p  temp;
 
 	ASSERT( f->dim == g->dim );
-	dim = f->dim;
-	if (f->maxlevel < g->maxlevel) {
-		maxlevel = g->maxlevel;
-	}
-	else {
-		maxlevel = f->maxlevel;
-	}
+	maxlevel = f->maxlevel < g->maxlevel ? g->maxlevel : f->maxlevel;
+	ASSERT(maxlevel == result->maxlevel);
 
-
-	back = func_new( maxlevel, dim );
 	for (k=0;k<=maxlevel;k++) {
 		if (k <= f->maxlevel) {
-			temp = folgen_vektor_add( back->hierarchie[k], f->hierarchie[k] );
-			folgen_vektor_del( back->hierarchie[k] );
-			back->hierarchie[k] = temp;
+			temp = folgen_vektor_add( result->hierarchie[k], f->hierarchie[k] );
+			folgen_vektor_del( result->hierarchie[k] );
+			result->hierarchie[k] = temp;
 		}
 		if (k <= g->maxlevel) {
-			temp = folgen_vektor_add( back->hierarchie[k], g->hierarchie[k] );
-			folgen_vektor_del( back->hierarchie[k] );
-			back->hierarchie[k] = temp;
+			temp = folgen_vektor_add( result->hierarchie[k], g->hierarchie[k] );
+			folgen_vektor_del( result->hierarchie[k] );
+			result->hierarchie[k] = temp;
 		}
 	}
-
-	return back;
 }
+
 
 int
 func_count( func_p f, func_p g, func_p w ) {
@@ -382,4 +394,41 @@ func_grid_zero(func_p f) {
 		}
 	}
 	vec_del(vec_1);
+}
+
+func_p 
+func_factor_multi(func_p function, fepc_real_t factor) {
+    func_p  back = func_new(function->maxlevel, function->dim);
+    
+    folgen_vektor_p  temp;
+    
+    int k;
+    
+	for (k=0;k<=function->maxlevel;k++) {
+		temp = folgen_vektor_factor_multi( function->hierarchie[k], factor );
+		folgen_vektor_del( back->hierarchie[k] );
+		back->hierarchie[k] = temp;
+	}
+
+	return back;
+}
+
+void
+funcs_del(func_p * array, int length) {
+	int n;
+
+	for (n = 0; n < length; n++) {
+		func_del(array[n]);
+	}
+	free(array);
+}
+
+void
+funcs_del_type(func_t * array, int length) {
+	int n;
+
+	for (n = 0; n < length; n++) {
+		func_clear(&array[n]);
+	}
+	free(array);
 }
